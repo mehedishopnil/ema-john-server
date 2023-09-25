@@ -31,8 +31,13 @@ async function run() {
     const productCollection = client.db('emaJohnDB').collection('products');
 
     app.get('/products', async(req, res)=>{
-        const result = productCollection.find().toArray();
+        const result = await   productCollection.find().toArray();
         res.send(result)
+    })
+
+    app.get('/totalProducts', async(req, res)=>{
+      const result = await productCollection.estimatedDocumentCount();
+      res.send({totalProducts: result});
     })
 
 
@@ -42,7 +47,7 @@ async function run() {
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
-    await client.close();
+    // await client.close();
   }
 }
 run().catch(console.dir);
@@ -51,6 +56,8 @@ run().catch(console.dir);
 app.get('/', (req,res)=>{
     res.send('John is busy to shopping')
 })
+
+
 
 app.listen(port, ()=>{
     console.log(`ema john server is running: ${port}`);
